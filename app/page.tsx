@@ -1,6 +1,9 @@
 'use client';
 
+import Script from 'next/script';
 import { FormEvent, useEffect, useState } from 'react';
+
+const turnstileSiteKey = '0x4AAAAAAEoDnlYE7s0enY6v';
 
 const slides = [
   {
@@ -155,10 +158,16 @@ export default function Home() {
     const form = event.currentTarget;
     const data = new FormData(form);
     const mainName = String(data.get('name') || '').trim();
+    const turnstileToken = String(data.get('cf-turnstile-response') || '').trim();
     const companions = String(data.get('companions') || '')
       .split(/[\n,]+/)
       .map((name) => name.trim())
       .filter(Boolean);
+
+    if (!turnstileToken) {
+      setFormStatus('error');
+      return;
+    }
 
     try {
       const response = await fetch('/api/rsvp', {
@@ -169,6 +178,7 @@ export default function Home() {
           phone: String(data.get('phone') || '').trim(),
           attendance: data.get('attendance') === 'yes',
           message: String(data.get('message') || '').trim(),
+          turnstileToken,
         }),
       });
 
@@ -226,6 +236,10 @@ export default function Home() {
 
   return (
     <main>
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        strategy="afterInteractive"
+      />
       <section className="hero" id="inicio" aria-label="Beatriz e Lucas">
         <div className="hero-gallery" aria-live="polite">
           {slides.map((slide, index) => (
@@ -364,6 +378,11 @@ export default function Home() {
             Deixe um recadinho
             <textarea name="message" rows={3} placeholder="Opcional, mas a gente vai amar ler" />
           </label>
+          <div
+            className="cf-turnstile"
+            data-sitekey={turnstileSiteKey}
+            data-theme="light"
+          />
           <button className="submit-button" disabled={formStatus === 'sending'} type="submit">
             {formStatus === 'sending' ? 'Enviando…' : 'Enviar confirmação'}
           </button>
