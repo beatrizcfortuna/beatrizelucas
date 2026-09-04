@@ -69,7 +69,7 @@ const gifts = [
   {
     price: 'R$ 500',
     title: '14 meses de aluguel',
-    image: '/presentes/barriga1.png',
+    image: '/presentes/barriga2.jpeg',
     tag: 'A casa própria vai ter que esperar!',
   },
   {
@@ -299,11 +299,9 @@ export default function Home() {
           <p className="section-kicker">Nós dois</p>
           <h2>Um novo capítulo começa aqui.</h2>
           <p>
-            Entre encontros, risadas e planos que cresceram junto com a gente,
-            escolhemos dizer “sim” a uma vida inteira lado a lado. Esta página é
-            um pedacinho da nossa alegria — e um convite para você fazer parte dela.
+              Escolhemos dizer “sim” a uma vida lado a lado. Esta página é um pedacinho da nossa alegria — e um convite para você fazer parte dela!
           </p>
-          <div className="signature">Bia &amp; Lucas</div>
+          <div className="signature">Beatriz &amp; Lucas</div>
         </div>
         <div className="story-photos" aria-label="Momentos do casal">
           <div className="story-photo story-photo-main" />
@@ -371,8 +369,7 @@ export default function Home() {
           <p className="section-kicker">Lista de presentes</p>
           <h2>Presentes que rendem boas histórias</h2>
           <p>
-            Uma seleção nada convencional para ajudar a construir uma vida a dois
-            com mais viagens, risadas, maracujá e opções de pagamento por Pix ou cartão.
+              Uma seleção de itens básicos para ajudar a construir uma vida a dois.
           </p>
         </div>
 
