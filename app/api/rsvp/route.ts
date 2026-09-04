@@ -1,5 +1,10 @@
 import { env } from 'cloudflare:workers';
 
+type TurnstileVerification = {
+  success?: boolean;
+  hostname?: string;
+};
+
 const createTableSql = `CREATE TABLE IF NOT EXISTS rsvps (
   id TEXT PRIMARY KEY NOT NULL,
   names TEXT NOT NULL,
@@ -16,6 +21,38 @@ function json(data: unknown, status = 200) {
   return Response.json(data, { status });
 }
 
+async function validateTurnstile(request: Request, token: string) {
+  const bindings = env as unknown as Record<string, string | undefined>;
+  const secret = bindings.TURNSTILE_SECRET;
+
+  if (!secret) {
+    console.error('TURNSTILE_SECRET não está configurada.');
+    return false;
+  }
+
+  const formData = new FormData();
+  formData.append('secret', secret);
+  formData.append('response', token);
+
+  const visitorIp = request.headers.get('CF-Connecting-IP');
+  if (visitorIp) formData.append('remoteip', visitorIp);
+
+  const response = await fetch(
+    'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+    { method: 'POST', body: formData },
+  );
+
+  const verification = (await response.json()) as TurnstileVerification;
+  if (!verification.success) return false;
+
+  const allowedHostnames = (bindings.TURNSTILE_ALLOWED_HOSTNAMES || '')
+    .split(',')
+    .map((hostname) => hostname.trim())
+    .filter(Boolean);
+
+  return !allowedHostnames.length || allowedHostnames.includes(verification.hostname || '');
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as {
@@ -23,7 +60,15 @@ export async function POST(request: Request) {
       phone?: unknown;
       attendance?: unknown;
       message?: unknown;
+      turnstileToken?: unknown;
     };
+
+    const turnstileToken =
+      typeof body.turnstileToken === 'string' ? body.turnstileToken.trim() : '';
+
+    if (!turnstileToken || !(await validateTurnstile(request, turnstileToken))) {
+      return json({ error: 'Não foi possível validar a confirmação.' }, 400);
+    }
 
     const names = Array.isArray(body.names)
       ? body.names
