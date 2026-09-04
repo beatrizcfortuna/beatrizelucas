@@ -468,8 +468,10 @@ nav a:hover { opacity: 1; }
   height: 245px;
   background-color: var(--mist);
   background-position: center;
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
+
 .gift-image::after {
   content: '';
   position: absolute;
@@ -532,6 +534,13 @@ nav a:hover { opacity: 1; }
   color: #62706b;
   font-size: 13px;
   line-height: 1.35;
+}
+.rsvp-warning {
+  margin: -10px 0 0;
+  color: #b73d32;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 .flexible-gift-input span {
   grid-column: 1;

@@ -131,6 +131,7 @@ export default function Home() {
   const [selectedGift, setSelectedGift] = useState<(typeof gifts)[number] | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'opening' | 'success' | 'error'>('idle');
   const [flexibleGiftAmount, setFlexibleGiftAmount] = useState('');
+  const [showCompanionWarning, setShowCompanionWarning] = useState(false);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -337,8 +338,15 @@ export default function Home() {
               name="companions"
               rows={3}
               placeholder="Um nome por linha (se houver)"
+              onFocus={() => setShowCompanionWarning(true)}
             />
           </label>
+          {showCompanionWarning && (
+  <p className="rsvp-warning">
+    Por organização do evento, somente pessoas incluídas neste convite
+    poderão entrar.
+  </p>
+)}
           <div className="form-row">
             <label>
               WhatsApp
