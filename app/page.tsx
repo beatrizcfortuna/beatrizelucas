@@ -26,78 +26,77 @@ const gifts = [
   {
     price: 'R$ 300',
     title: 'Maracujás para a Bia dormir tranquila por uma semana',
-    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=82',
+    image: '/presentes/maracuja.png',
     tag: 'Paz doméstica',
   },
   {
     price: 'R$ 180',
     title: 'Panos de chão novos',
-    image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=82',
-    tag: 'Luxo doméstico',
+    image: '/presentes/panodechao.png',
+    tag: 'Tarefas domésticas',
   },
   {
     price: 'R$ 450',
     title: 'Cobertor extra para a noiva estar sempre coberta de razão',
-    image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=82',
+    image: '/presentes/cobertor.png',
     tag: 'Saúde conjugal',
     // bia cheia de cobertor
   },
   {
     price: 'R$ 700',
     title: 'Poupança preventiva: "Fundo de emergência para a fatura do cartão pós-casamento',
-    image: 'https://images.unsplash.com/photo-1615486131726-cf0011927a54?auto=format&fit=crop&w=900&q=82',
-    tag: 'Lua de mel',
+    image: '/presentes/poupancareserva.png',
+    tag: 'Salva os mano',
   },
   {
     price: 'R$ 150',
     title: 'Um mês de academia para os noivos',
-    image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=900&q=82',
-    tag: 'Alta gastronomia',
-    // foto minha e da bia gordão
+    image: '/presentes/gordos.png',
+    tag: 'Projeto verão 2027',
   },
   {
     price: 'R$ 120',
     title: 'Rolo de macarrão da noiva',
-    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=82',
+    image: '/presentes/rolomacarrao.jpg',
     tag: 'Para quando o noivo aprontar',
   },
   {
     price: 'R$ 150',
     title: 'Capacete contra rolo de macarrão',
-    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=82',
-    tag: 'Para o noivo se proteger quando necessário!',
+    image: '/presentes/capacete.jpg',
+    tag: 'Para o noivo se proteger da noiva',
   },
   {
     price: 'R$ 500',
-    title: 'Ajuda com o aluguel',
-    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=82',
+    title: '14 meses de aluguel',
+    image: '/presentes/barriga1.png',
     tag: 'A casa própria vai ter que esperar!',
   },
   {
     price: 'R$ 120',
     title: '1 ano de corte de cabelo para o noivo',
-    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=82',
+    image: '/presentes/ronaldo.png',
     tag: 'Estilo jogador caro',
     //ronaldo fenomeno
   },
   {
     price: 'R$ 50',
     title: 'Só para não dizer que não dei nada',
-    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=82',
+    image: '/presentes/paichris.png',
     tag: 'Mas se não comprar nada, o desconto é maior!',
     //pai do chris
   },
   {
     price: 'R$ 7000',
     title: 'Deus tocou seu coração',
-    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=82',
+    image: '/presentes/ryca.png',
     tag: 'Ryco(a)',
     //meme eu sou rica
   },
   {
     price: 'R$ 500',
     title: 'Cota para perguntar quando vem os filhos',
-    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=82',
+    image: '/presentes/crianca.jpg',
     tag: 'Ryco(a)',
     //meme criança incrédula
   },
