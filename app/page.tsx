@@ -23,25 +23,7 @@ const slides = [
 const flexibleGiftTitle = 'Valor livre: o coração mandou, o Pix obedeceu';
 
 const gifts = [
-  {
-    price: 'R$ 300',
-    title: 'Maracujás para a Bia dormir tranquila por uma semana',
-    image: '/presentes/maracuja.png',
-    tag: 'Paz doméstica',
-  },
-  {
-    price: 'R$ 180',
-    title: 'Panos de chão novos',
-    image: '/presentes/panodechao.png',
-    tag: 'Tarefas domésticas',
-  },
-  {
-    price: 'R$ 450',
-    title: 'Cobertor extra para a noiva estar sempre coberta de razão',
-    image: '/presentes/cobertor.png',
-    tag: 'Saúde conjugal',
-    // bia cheia de cobertor
-  },
+ 
   {
     price: 'R$ 700',
     title: 'Poupança preventiva: "Fundo de emergência para a fatura do cartão pós-casamento',
@@ -79,6 +61,32 @@ const gifts = [
     tag: 'Estilo jogador caro',
     //ronaldo fenomeno
   },
+   {
+    price: 'R$ 300',
+    title: 'Maracujás para a Bia dormir tranquila por uma semana',
+    image: '/presentes/maracuja.png',
+    tag: 'Paz doméstica',
+  },
+  {
+    price: 'R$ 180',
+    title: 'Panos de chão novos',
+    image: '/presentes/panodechao.png',
+    tag: 'Tarefas domésticas',
+  },
+  {
+    price: 'R$ 450',
+    title: 'Cobertor extra para a noiva estar sempre coberta de razão',
+    image: '/presentes/cobertor.png',
+    tag: 'Saúde conjugal',
+    // bia cheia de cobertor
+  },
+    {
+    price: 'R$ 500',
+    title: 'Cota para perguntar quando vem os filhos',
+    image: '/presentes/crianca.jpg',
+    tag: 'Ryco(a)',
+    //meme criança incrédula
+  },
   {
     price: 'R$ 50',
     title: 'Só para não dizer que não dei nada',
@@ -93,13 +101,7 @@ const gifts = [
     tag: 'Ryco(a)',
     //meme eu sou rica
   },
-  {
-    price: 'R$ 500',
-    title: 'Cota para perguntar quando vem os filhos',
-    image: '/presentes/crianca.jpg',
-    tag: 'Ryco(a)',
-    //meme criança incrédula
-  },
+
   {
     price: 'Você decide',
     title: flexibleGiftTitle,
