@@ -57,13 +57,13 @@ const gifts = [
   {
     price: 'R$ 120',
     title: 'Rolo de macarrão da noiva',
-    image: '/presentes/rolomacarrao.jpg',
+    image: '/presentes/rolomacarrao.png',
     tag: 'Para quando o noivo aprontar',
   },
   {
     price: 'R$ 150',
     title: 'Capacete contra rolo de macarrão',
-    image: '/presentes/capacete.jpg',
+    image: '/presentes/capacete.png',
     tag: 'Para o noivo se proteger da noiva',
   },
   {
