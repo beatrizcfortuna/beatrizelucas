@@ -256,15 +256,16 @@ nav a:hover { opacity: 1; }
 }
 .photo-note {
   position: absolute;
-  left: -40px;
-  bottom: 13px;
+  left: 24px;
+  bottom: 24px;
   padding: 15px 18px;
-  background: var(--paper);
+  background: rgb(255 253 248 / 82%);
   color: var(--gold);
   font-family: var(--serif);
   font-size: 15px;
   font-style: italic;
   line-height: 1.35;
+  backdrop-filter: blur(8px);
   box-shadow: 0 12px 38px rgb(21 45 38 / 10%);
 }
 
@@ -681,7 +682,7 @@ footer a {
   .story { padding-block: 82px; }
   .story-carousel { min-height: 440px; }
   .story-carousel-controls { right: 12px; bottom: 12px; }
-  .photo-note { left: -8px; bottom: 0; }
+  .photo-note { left: 14px; bottom: 14px; }
   .rsvp { padding-block: 82px; }
   .rsvp-form { padding: 28px 22px; }
   .form-row { grid-template-columns: 1fr; }
