@@ -293,7 +293,7 @@ export default function Home() {
         </header>
 
         <div className="hero-content">
-          <p className="eyebrow">Vamos celebrar o amor</p>
+          <p className="eyebrow">Venha celebrar com a gente!</p>
           <h1 className="couple-mark">
             <span>Beatriz</span>
             <b>&amp;</b>
@@ -367,7 +367,7 @@ export default function Home() {
           </label>
           {showCompanionWarning && (
   <p className="rsvp-warning">
-    Por organização do evento, somente pessoas incluídas neste convite
+    Por organização do evento, somente pessoas incluídas no convite
     poderão entrar.
   </p>
 )}
