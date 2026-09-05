@@ -1,9 +1,9 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "beatrizelucas2",
+  "keep_vars": true,
   "main": "dist/server/ssr/index.js",
   "compatibility_date": "2026-05-15",
-  "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "dist/client"
   }
