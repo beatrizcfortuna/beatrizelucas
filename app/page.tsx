@@ -1,7 +1,7 @@
 'use client';
 
 import Script from 'next/script';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 
 const turnstileSiteKey = '0x4AAAAAAEoDnlYE7s0enY6v';
 
@@ -152,7 +152,23 @@ export default function Home() {
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'opening' | 'success' | 'error'>('idle');
   const [flexibleGiftAmount, setFlexibleGiftAmount] = useState('');
   const [showCompanionWarning, setShowCompanionWarning] = useState(false);
+const submittingRef = useRef(false);
+const [formError, setFormError] = useState('');
 
+function getTurnstileApi() {
+  return (
+    window as unknown as {
+      turnstile?: {
+        getResponse: (container: string) => string | undefined;
+        isExpired: (container: string) => boolean;
+        reset: (container: string) => void;
+      };
+    }
+  ).turnstile;
+}
+
+
+  
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return;
@@ -179,43 +195,103 @@ export default function Home() {
     }
   }, []);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setFormStatus('sending');
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const mainName = String(data.get('name') || '').trim();
-    const turnstileToken = String(data.get('cf-turnstile-response') || '').trim();
-    const companions = String(data.get('companions') || '')
-      .split(/[\n,]+/)
-      .map((name) => name.trim())
-      .filter(Boolean);
+async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  event.preventDefault();
 
-    if (!turnstileToken) {
+  // Bloqueia cliques simultâneos, inclusive antes do React atualizar a tela.
+  if (submittingRef.current) return;
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+  const turnstile = getTurnstileApi();
+
+  setFormError('');
+
+  if (!turnstile) {
+    setFormError('A verificação ainda está carregando. Aguarde alguns instantes.');
+    setFormStatus('error');
+    return;
+  }
+
+  let turnstileToken = '';
+
+  try {
+    if (turnstile.isExpired('#rsvp-turnstile')) {
+      turnstile.reset('#rsvp-turnstile');
+      setFormError('A verificação expirou. Aguarde a nova validação e envie novamente.');
       setFormStatus('error');
       return;
     }
 
-    try {
-      const response = await fetch('/api/rsvp', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          names: [mainName, ...companions],
-          phone: String(data.get('phone') || '').trim(),
-          attendance: data.get('attendance') === 'yes',
-          message: String(data.get('message') || '').trim(),
-          turnstileToken,
-        }),
-      });
-
-      if (!response.ok) throw new Error('Não foi possível enviar');
-      form.reset();
-      setFormStatus('success');
-    } catch {
-      setFormStatus('error');
-    }
+    // Lê o token atual diretamente do widget.
+    turnstileToken = turnstile.getResponse('#rsvp-turnstile') || '';
+  } catch {
+    setFormError('Aguarde a verificação de segurança terminar antes de enviar.');
+    setFormStatus('error');
+    return;
   }
+
+  if (!turnstileToken) {
+    setFormError('Aguarde a verificação de segurança indicar sucesso.');
+    setFormStatus('error');
+    return;
+  }
+
+  const mainName = String(data.get('name') || '').trim();
+  const companions = String(data.get('companions') || '')
+    .split(/[\n,]+/)
+    .map((name) => name.trim())
+    .filter(Boolean);
+
+  submittingRef.current = true;
+  setFormStatus('sending');
+
+  try {
+    const response = await fetch('/api/rsvp', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        names: [mainName, ...companions],
+        phone: String(data.get('phone') || '').trim(),
+        attendance: data.get('attendance') === 'yes',
+        message: String(data.get('message') || '').trim(),
+        turnstileToken,
+      }),
+    });
+
+    const result = (await response.json()) as {
+      ok?: boolean;
+      error?: string;
+    };
+
+    if (!response.ok || result.ok !== true) {
+      throw new Error(
+        result.error || 'Não foi possível salvar a confirmação.',
+      );
+    }
+
+    form.reset();
+    setShowCompanionWarning(false);
+    setFormStatus('success');
+  } catch (error) {
+    setFormError(
+      error instanceof Error
+        ? error.message
+        : 'Falha de conexão. Confira a lista antes de repetir o envio.',
+    );
+    setFormStatus('error');
+  } finally {
+    // Toda tentativa pode consumir o token, mesmo quando não salva.
+    // Renova o widget sem apagar os campos em caso de erro.
+    try {
+      turnstile.reset('#rsvp-turnstile');
+    } catch {
+      console.error('Não foi possível reiniciar o Turnstile.');
+    }
+
+    submittingRef.current = false;
+  }
+}
 
   function handleGiftSelect(gift: (typeof gifts)[number]) {
     setSelectedGift(gift);
@@ -388,17 +464,23 @@ export default function Home() {
             Deixe um recadinho
             <textarea name="message" rows={3} placeholder="Opcional, mas a gente vai amar ler" />
           </label>
-          <div
-            className="cf-turnstile"
-            data-sitekey={turnstileSiteKey}
-            data-theme="light"
-          />
+
+
+<div
+  id="rsvp-turnstile"
+  className="cf-turnstile"
+  data-sitekey={turnstileSiteKey}
+  data-theme="light"
+  data-refresh-expired="auto"
+/>
+
+          
           <button className="submit-button" disabled={formStatus === 'sending'} type="submit">
             {formStatus === 'sending' ? 'Enviando…' : 'Enviar confirmação'}
           </button>
           <p className={`form-status ${formStatus}`} role="status" aria-live="polite">
             {formStatus === 'success' && 'Presença confirmada! Obrigado por fazer parte desse momento. ♡'}
-            {formStatus === 'error' && 'Não conseguimos salvar agora. Tente novamente em instantes.'}
+            {formStatus === 'error' && formError}
           </p>
         </form>
       </section>
