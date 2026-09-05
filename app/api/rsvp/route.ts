@@ -3,6 +3,8 @@ import { env } from 'cloudflare:workers';
 type TurnstileVerification = {
   success?: boolean;
   hostname?: string;
+  action?: string;
+  'error-codes'?: string[];
 };
 
 const createTableSql = `CREATE TABLE IF NOT EXISTS rsvps (
@@ -42,15 +44,33 @@ async function validateTurnstile(request: Request, token: string) {
     { method: 'POST', body: formData },
   );
 
-  const verification = (await response.json()) as TurnstileVerification;
-  if (!verification.success) return false;
+const verification = (await response.json()) as TurnstileVerification;
 
-  const allowedHostnames = (bindings.TURNSTILE_ALLOWED_HOSTNAMES || '')
-    .split(',')
-    .map((hostname) => hostname.trim())
-    .filter(Boolean);
+if (!verification.success) {
+  console.error('Turnstile recusado', {
+    hostname: verification.hostname,
+    errorCodes: verification['error-codes'] ?? [],
+  });
+  return false;
+}
 
-  return !allowedHostnames.length || allowedHostnames.includes(verification.hostname || '');
+const allowedHostnames = (bindings.TURNSTILE_ALLOWED_HOSTNAMES || '')
+  .split(',')
+  .map((hostname) => hostname.trim())
+  .filter(Boolean);
+
+const hostname = verification.hostname || '';
+const hostnameAllowed =
+  !allowedHostnames.length || allowedHostnames.includes(hostname);
+
+if (!hostnameAllowed) {
+  console.error('Hostname recusado pelo RSVP', {
+    hostnameRecebido: hostname,
+    hostnamesPermitidos: allowedHostnames,
+  });
+}
+
+return hostnameAllowed;
 }
 
 export async function POST(request: Request) {
