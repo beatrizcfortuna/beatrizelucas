@@ -17,7 +17,7 @@ const slides = [
     position: 'center 55%',
   },
   {
-    image: '/presentes/1bq.png',
+    image: '/presentes/4bq.png',
     alt: 'Detalhes românticos de uma cerimônia de casamento',
     position: 'center 48%',
   },
