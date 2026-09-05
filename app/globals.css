@@ -494,7 +494,7 @@ nav a:hover { opacity: 1; }
   height: 245px;
   background-color: var(--mist);
   background-position: center;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
 }
 
