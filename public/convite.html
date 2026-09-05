@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beatriz & Lucas | Convite Encantado</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg1: #f8f1f6;
+      --bg2: #e8dff0;
+      --bg3: #d8cfe7;
+      --gold: #b7955a;
+      --gold-soft: #d8c08a;
+      --ink: #4c3d46;
+      --paper: #fffaf5;
+      --shadow: rgba(60, 38, 54, 0.20);
+      --shadow-strong: rgba(35, 18, 29, 0.28);
+      --white-glow: rgba(255,255,255,.85);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Cormorant Garamond", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.75) 0%, rgba(255,255,255,0) 30%),
+        radial-gradient(circle at 20% 20%, rgba(255, 240, 245, .7) 0%, rgba(255, 240, 245, 0) 30%),
+        radial-gradient(circle at 80% 30%, rgba(255, 252, 230, .45) 0%, rgba(255, 252, 230, 0) 22%),
+        linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* névoa suave mágica */
+    .mist {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 10% 80%, rgba(255,255,255,.24), transparent 22%),
+        radial-gradient(circle at 85% 20%, rgba(255,255,255,.18), transparent 20%),
+        radial-gradient(circle at 50% 100%, rgba(255,240,250,.18), transparent 26%);
+      filter: blur(20px);
+      opacity: .9;
+    }
+
+    /* partículas */
+    .sparkles {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.95);
+      box-shadow:
+        0 0 12px rgba(255,255,255,.95),
+        0 0 20px rgba(255, 239, 188, .75);
+      animation: floatSpark linear infinite;
+      opacity: .75;
+    }
+
+    .sparkle::before,
+    .sparkle::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255,255,255,.8);
+      border-radius: 999px;
+    }
+
+    .sparkle::before {
+      width: 14px;
+      height: 2px;
+    }
+
+    .sparkle::after {
+      width: 2px;
+      height: 14px;
+    }
+
+    @keyframes floatSpark {
+      0% {
+        transform: translateY(0) scale(.8);
+        opacity: 0;
+      }
+      10% {
+        opacity: .8;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-120px) scale(1.15);
+        opacity: 0;
+      }
+    }
+
+    .top-title {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .top-title .line1 {
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(28px, 4vw, 46px);
+      color: #7a5568;
+      text-shadow: 0 2px 10px rgba(255,255,255,.7);
+      line-height: 1;
+    }
+
+    .top-title .line2 {
+      margin-top: 4px;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(76,61,70,.65);
+    }
+
+    .book-scene {
+      position: relative;
+      width: min(92vw, 520px);
+      aspect-ratio: 0.70;
+      perspective: 3000px;
+      z-index: 5;
+    }
+
+    .book-shadow {
+      position: absolute;
+      width: 88%;
+      height: 30px;
+      left: 6%;
+      bottom: -20px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(44,23,36,.25), rgba(44,23,36,0));
+      filter: blur(14px);
+      z-index: 0;
+    }
+
+    .livro {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      z-index: 2;
+    }
+
+    .pagina {
+      position: absolute;
+      inset: 0;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      transition: transform 1.2s cubic-bezier(.67, .01, .30, 1), filter 1s ease;
+      cursor: pointer;
+      border-radius: 6px 16px 16px 6px;
+      box-shadow:
+        0 24px 45px var(--shadow),
+        0 8px 18px rgba(0,0,0,.10);
+      will-change: transform;
+      overflow: visible;
+    }
+
+    .pagina.virada {
+      transform: rotateY(-180deg);
+    }
+
+    .pagina::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid rgba(183,149,90,.35);
+      pointer-events: none;
+      z-index: 10;
+      box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,.28),
+        inset 0 0 40px rgba(255,245,225,.18);
+    }
+
+    /* brilho da lombada */
+    .pagina::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 10%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(0,0,0,.18), rgba(255,255,255,.08), transparent);
+      z-index: 8;
+      pointer-events: none;
+      opacity: .65;
+    }
+
+    .frente,
+    .verso {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      overflow: hidden;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .frente {
+      background: var(--paper);
+    }
+
+    .frente img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      user-select: none;
+      pointer-events: none;
+      filter: saturate(1.02) contrast(1.03) brightness(1.02);
+    }
+
+    .frente .overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(44, 18, 35, .32), rgba(44,18,35,.02) 34%, rgba(255,255,255,0) 55%),
+        radial-gradient(circle at top right, rgba(255,255,255,.15), transparent 25%);
+      z-index: 2;
+    }
+
+    .frente .ornament {
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(255, 243, 220, .55);
+      border-radius: 10px 20px 10px 20px;
+      z-index: 3;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+    }
+
+    .frente .caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 34px;
+      z-index: 4;
+      text-align: center;
+      color: #fffaf2;
+      text-shadow: 0 2px 10px rgba(0,0,0,.28);
+      padding: 0 24px;
+    }
+
+    .frente .caption .mini {
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: .95;
+    }
+
+    .frente .caption .title {
+      margin-top: 6px;
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1;
+    }
+
+    .verso {
+      transform: rotateY(180deg);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.85), rgba(255,255,255,.25) 26%, rgba(255,255,255,0) 45%),
+        linear-gradient(135deg, #fffaf4 0%, #f8efe5 60%, #f1e8df 100%);
+      border-radius: 16px 6px 6px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 34px;
+    }
+
+    .verso .back-content {
+      width: 100%;
+      border: 1px solid rgba(183,149,90,.26);
+      border-radius: 16px;
+      padding: 28px 18px;
+      background: rgba(255,255,255,.35);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.45);
+    }
+
+    .verso .back-content .symbol {
+      font-size: 32px;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .verso .back-content .text1 {
+      font-family: "Great Vibes", cursive;
+      font-size: 28px;
+      color: #8a6570;
+      line-height: 1.1;
+    }
+
+    .verso .back-content .text2 {
+      margin-top: 8px;
+      font-size: 14px;
+      letter-spacing: 1.4px;
+      color: rgba(76,61,70,.72);
+    }
+
+    /* pontinha da página */
+    .page-corner {
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      right: 0;
+      bottom: 0;
+      z-index: 9;
+      pointer-events: none;
+      opacity: 0;
+      transition: transform .3s ease, opacity .3s ease;
+      transform: scale(.85);
+      transform-origin: bottom right;
+      border-radius: 0 0 16px 0;
+      background:
+        linear-gradient(135deg,
+          transparent 46%,
+          rgba(255,255,255,.95) 49%,
+          rgba(241,230,210,.98) 65%,
+          rgba(211,193,159,.92) 100%);
+      box-shadow:
+        -5px -5px 10px rgba(0,0,0,.08) inset,
+        0 0 10px rgba(255,255,255,.35);
+    }
+
+    .pagina:not(.virada):hover .page-corner {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .contador {
+      position: fixed;
+      top: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: rgba(76,61,70,.6);
+      z-index: 50;
+    }
+
+    .instrucao {
+      position: fixed;
+      bottom: 26px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,.55);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.45);
+      padding: 11px 18px;
+      border-radius: 999px;
+      color: #6b5360;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(80, 52, 65, 0.10);
+      z-index: 50;
+      transition: opacity .5s ease, transform .5s ease;
+      white-space: nowrap;
+    }
+
+    .instrucao.sumir {
+      opacity: 0;
+      transform: translate(-50%, 14px);
+    }
+
+    .seta {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(255,255,255,.4);
+      border-radius: 50%;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.8), rgba(255,255,255,.58));
+      backdrop-filter: blur(10px);
+      box-shadow:
+        0 8px 24px rgba(76,61,70,.12),
+        inset 0 0 0 1px rgba(255,255,255,.4);
+      font-size: 28px;
+      color: #7c5a68;
+      cursor: pointer;
+      z-index: 60;
+      transition: transform .25s ease, opacity .3s ease, box-shadow .25s ease;
+    }
+
+    .seta:hover {
+      box-shadow:
+        0 10px 28px rgba(76,61,70,.18),
+        0 0 15px rgba(255,255,255,.25);
+    }
+
+    .seta:active {
+      transform: translateY(-50%) scale(.92);
+    }
+
+    .anterior {
+      left: max(12px, calc(50vw - 345px));
+    }
+
+    .proxima {
+      right: max(12px, calc(50vw - 345px));
+    }
+
+    .seta.desabilitada {
+      opacity: .22;
+      pointer-events: none;
+    }
+
+    /* brilho decorativo no canto */
+    .magic-ring {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow:
+        0 0 20px rgba(255,255,255,.18),
+        inset 0 0 20px rgba(255,255,255,.08);
+      pointer-events: none;
+      opacity: .5;
+    }
+
+    .ring1 {
+      top: 10%;
+      left: 6%;
+    }
+
+    .ring2 {
+      bottom: 12%;
+      right: 7%;
+      width: 100px;
+      height: 100px;
+    }
+
+    @media (max-width: 600px) {
+      .book-scene {
+        width: 88vw;
+      }
+
+      .seta {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+      }
+
+      .anterior {
+        left: 6px;
+      }
+
+      .proxima {
+        right: 6px;
+      }
+
+      .contador {
+        top: 72px;
+      }
+
+      .instrucao {
+        font-size: 11px;
+        bottom: 12px;
+      }
+
+      .top-title .line2 {
+        letter-spacing: 2px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mist"></div>
+  <div class="sparkles" id="sparkles"></div>
+  <div class="magic-ring ring1"></div>
+  <div class="magic-ring ring2"></div>
+
+  <div class="top-title">
+    <div class="line1">Beatriz & Lucas</div>
+    <div class="line2">Convite encantado</div>
+  </div>
+
+  <div class="contador" id="contador">1 / 5</div>
+
+  <div class="book-scene">
+    <div class="livro" id="livro">
+
+      <!-- PÁGINA 1 -->
+      <div class="pagina" data-pagina="1">
+        <div class="frente">
+          <img src="https://picsum.photos/id/1040/1000/1400" alt="Página 1">
+          <div class="overlay"></div>
+          <div class="ornament"></div>
+          <div class="caption">
+            <div class="mini">Era uma vez...</div>
+            <div class="title">um grande amor</div>
+          </div>
+          <div class="page-corner"></div>
+        </div>
+        <div class="verso">
+          <div class="back-content">
+            <div class="symbol">✦</div>
+            <div class="text1">Uma nova página</div>
+            <div class="text2">clique para continuar a história</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 2 -->
+      <div class="pagina" data-pagina="2">
+        <div class="frente">
+          <img src="https://picsum.photos/id/1067/1000/1400" alt="Página 2">
+          <div class="overlay"></div>
+          <div class="ornament"></div>
+          <div class="caption">
+            <div class="mini">Dois caminhos</div>
+            <div class="title">que se encontraram</div>
+          </div>
+          <div class="page-corner"></div>
+        </div>
+        <div class="verso">
+          <div class="back-content">
+            <div class="symbol">❀</div>
+            <div class="text1">Cada detalhe importa</div>
+            <div class="text2">como num conto delicado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 3 -->
+      <div class="pagina" data-pagina="3">
+        <div class="frente">
+          <img src="https://picsum.photos/id/1036/1000/1400" alt="Página 3">
+          <div class="overlay"></div>
+          <div class="ornament"></div>
+          <div class="caption">
+            <div class="mini">Com alegria</div>
+            <div class="title">escreveremos nosso para sempre</div>
+          </div>
+          <div class="page-corner"></div>
+        </div>
+        <div class="verso">
+          <div class="back-content">
+            <div class="symbol">✧</div>
+            <div class="text1">Mais um capítulo</div>
+            <div class="text2">cheio de encanto e luz</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 4 -->
+      <div class="pagina" data-pagina="4">
+        <div class="frente">
+          <img src="https://picsum.photos/id/1011/1000/1400" alt="Página 4">
+          <div class="overlay"></div>
+          <div class="ornament"></div>
+          <div class="caption">
+            <div class="mini">E com carinho</div>
+            <div class="title">convidamos você</div>
+          </div>
+          <div class="page-corner"></div>
+        </div>
+        <div class="verso">
+          <div class="back-content">
+            <div class="symbol">✿</div>
+            <div class="text1">Quase no final...</div>
+            <div class="text2">a próxima página revela o convite</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PÁGINA 5 -->
+      <div class="pagina" data-pagina="5">
+        <div class="frente">
+          <img src="https://picsum.photos/id/1025/1000/1400" alt="Página 5">
+          <div class="overlay"></div>
+          <div class="ornament"></div>
+          <div class="caption">
+            <div class="mini">Nosso grande dia</div>
+            <div class="title">será ainda mais especial com você</div>
+          </div>
+          <div class="page-corner"></div>
+        </div>
+        <div class="verso">
+          <div class="back-content">
+            <div class="symbol">❤</div>
+            <div class="text1">Fim de uma página</div>
+            <div class="text2">início de uma nova vida</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="book-shadow"></div>
+  </div>
+
+  <button class="seta anterior desabilitada" id="anterior" aria-label="Página anterior">‹</button>
+  <button class="seta proxima" id="proxima" aria-label="Próxima página">›</button>
+
+  <div class="instrucao" id="instrucao">Clique na página para virar ✨</div>
+
+  <script>
+    const paginas = Array.from(document.querySelectorAll(".pagina"));
+    const botaoAnterior = document.getElementById("anterior");
+    const botaoProxima = document.getElementById("proxima");
+    const contador = document.getElementById("contador");
+    const instrucao = document.getElementById("instrucao");
+    const sparkles = document.getElementById("sparkles");
+
+    let paginaAtual = 0;
+
+    function organizarPaginas() {
+      const total = paginas.length;
+
+      paginas.forEach((pagina, indice) => {
+        if (indice >= paginaAtual) {
+          pagina.style.zIndex = total - indice;
+        } else {
+          pagina.style.zIndex = indice + 1;
+        }
+      });
+    }
+
+    function atualizarInterface() {
+      const numeroExibido = Math.min(paginaAtual + 1, paginas.length);
+      contador.textContent = numeroExibido + " / " + paginas.length;
+
+      if (paginaAtual === 0) {
+        botaoAnterior.classList.add("desabilitada");
+      } else {
+        botaoAnterior.classList.remove("desabilitada");
+      }
+
+      if (paginaAtual >= paginas.length - 1) {
+        botaoProxima.classList.add("desabilitada");
+      } else {
+        botaoProxima.classList.remove("desabilitada");
+      }
+    }
+
+    function proximaPagina() {
+      if (paginaAtual >= paginas.length - 1) return;
+
+      const pagina = paginas[paginaAtual];
+      pagina.classList.add("virada");
+      paginaAtual++;
+
+      instrucao.classList.add("sumir");
+
+      setTimeout(() => {
+        organizarPaginas();
+      }, 550);
+
+      atualizarInterface();
+    }
+
+    function paginaAnterior() {
+      if (paginaAtual <= 0) return;
+
+      paginaAtual--;
+      const pagina = paginas[paginaAtual];
+
+      organizarPaginas();
+
+      requestAnimationFrame(() => {
+        pagina.classList.remove("virada");
+      });
+
+      atualizarInterface();
+    }
+
+    paginas.forEach((pagina, indice) => {
+      pagina.addEventListener("click", function () {
+        if (indice === paginaAtual) {
+          proximaPagina();
+        }
+      });
+    });
+
+    botaoProxima.addEventListener("click", proximaPagina);
+    botaoAnterior.addEventListener("click", paginaAnterior);
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowRight" || event.key === " ") {
+        proximaPagina();
+      }
+
+      if (event.key === "ArrowLeft") {
+        paginaAnterior();
+      }
+    });
+
+    let inicioTouchX = 0;
+    let fimTouchX = 0;
+
+    document.addEventListener("touchstart", function (event) {
+      inicioTouchX = event.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener("touchend", function (event) {
+      fimTouchX = event.changedTouches[0].screenX;
+      const distancia = fimTouchX - inicioTouchX;
+
+      if (distancia < -50) proximaPagina();
+      if (distancia > 50) paginaAnterior();
+    }, { passive: true });
+
+    function criarParticulas(qtd = 24) {
+      for (let i = 0; i < qtd; i++) {
+        const el = document.createElement("span");
+        el.className = "sparkle";
+
+        const left = Math.random() * 100;
+        const top = 20 + Math.random() * 80;
+        const delay = Math.random() * 8;
+        const duration = 6 + Math.random() * 6;
+        const scale = 0.5 + Math.random() * 0.9;
+
+        el.style.left = left + "vw";
+        el.style.top = top + "vh";
+        el.style.animationDelay = delay + "s";
+        el.style.animationDuration = duration + "s";
+        el.style.transform = "scale(" + scale + ")";
+
+        sparkles.appendChild(el);
+      }
+    }
+
+    criarParticulas();
+    organizarPaginas();
+    atualizarInterface();
+  </script>
+</body>
+</html>
