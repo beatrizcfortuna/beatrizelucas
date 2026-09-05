@@ -300,8 +300,7 @@ export default function Home() {
             <span>Lucas</span>
           </h1>
           <p className="hero-message">
-            Nosso grande dia está chegando. Queremos viver cada abraço,
-            sorriso e brinde ao lado de quem faz parte da nossa história.
+            Nosso grande dia está chegando! Queremos brindar ao lado de quem faz parte da nossa história.
           </p>
           <a className="primary-button" href="#presenca">
             Confirmar presença
