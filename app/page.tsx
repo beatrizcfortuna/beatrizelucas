@@ -7,19 +7,35 @@ const turnstileSiteKey = '0x4AAAAAAEoDnlYE7s0enY6v';
 
 const slides = [
   {
-    image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=2200&q=88',
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2200&q=88',
     alt: 'Casal celebrando o casamento ao ar livre',
     position: 'center 42%',
   },
   {
-    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2200&q=88',
+    image: '/presentes/3fazenda.png',
     alt: 'Celebração de casamento em meio à natureza',
     position: 'center 55%',
   },
   {
-    image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=2200&q=88',
+    image: '/presentes/1bq.png',
     alt: 'Detalhes românticos de uma cerimônia de casamento',
     position: 'center 48%',
+  },
+];
+
+// Troque apenas os valores de image pelas URLs das fotos de vocês.
+const storySlides = [
+  {
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=88',
+    alt: 'Primeiro momento da história de Beatriz e Lucas',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1600&q=88',
+    alt: 'Segundo momento da história de Beatriz e Lucas',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1600&q=88',
+    alt: 'Terceiro momento da história de Beatriz e Lucas',
   },
 ];
 
@@ -130,6 +146,7 @@ const paymentMethods = [
 
 export default function Home() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [activeStorySlide, setActiveStorySlide] = useState(0);
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [selectedGift, setSelectedGift] = useState<(typeof gifts)[number] | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'opening' | 'success' | 'error'>('idle');
@@ -142,6 +159,16 @@ export default function Home() {
     const timer = window.setInterval(
       () => setActiveSlide((current) => (current + 1) % slides.length),
       5600,
+    );
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    const timer = window.setInterval(
+      () => setActiveStorySlide((current) => (current + 1) % storySlides.length),
+      10000,
     );
     return () => window.clearInterval(timer);
   }, []);
@@ -311,22 +338,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="story section-shell" id="nossa-historia">
-        <div className="story-copy">
-          <p className="section-kicker">Nós dois</p>
-          <h2>Um novo capítulo começa aqui.</h2>
-          <p>
-              Escolhemos dizer “sim” a uma vida lado a lado. Esta página é um pedacinho da nossa alegria — e um convite para você fazer parte dela!
-          </p>
-          <div className="signature">Beatriz &amp; Lucas</div>
-        </div>
-        <div className="story-photos" aria-label="Momentos do casal">
-          <div className="story-photo story-photo-main" />
-          <div className="story-photo story-photo-small" />
-          <span className="photo-note">as melhores histórias<br />são vividas juntos</span>
-        </div>
-      </section>
-
       <section className="rsvp" id="presenca">
         <div className="rsvp-intro">
           <p className="section-kicker">RSVP</p>
@@ -391,6 +402,55 @@ export default function Home() {
             {formStatus === 'error' && 'Não conseguimos salvar agora. Tente novamente em instantes.'}
           </p>
         </form>
+      </section>
+
+      <section className="story section-shell" id="nossa-historia">
+        <div className="story-copy">
+          <p className="section-kicker">Nossa história</p>
+          <h2>Conheça nossa história...</h2>
+          <p>
+            Beatriz nasceu em Barbacena e Lucas, em Belo Horizonte. Eles se conheceram
+            na Universidade Federal de Minas Gerais e vêm construindo uma história
+            baseada no amor e respeito mútuo ao lado de suas famílias e queridos amigos.
+          </p>
+          <div className="signature">Beatriz &amp; Lucas</div>
+        </div>
+
+        <div className="story-carousel" aria-label="Fotos de Beatriz e Lucas">
+          {storySlides.map((slide, index) => (
+            <div
+              className={`story-carousel-slide ${index === activeStorySlide ? 'is-active' : ''}`}
+              key={slide.image}
+              role="img"
+              aria-label={slide.alt}
+              style={{ backgroundImage: `url("${slide.image}")` }}
+            />
+          ))}
+          <div className="story-carousel-controls" aria-label="Escolher foto da nossa história">
+            <button
+              type="button"
+              aria-label="Foto anterior"
+              onClick={() =>
+                setActiveStorySlide(
+                  (activeStorySlide - 1 + storySlides.length) % storySlides.length,
+                )
+              }
+            >
+              ‹
+            </button>
+            <span aria-live="polite">
+              {activeStorySlide + 1} / {storySlides.length}
+            </span>
+            <button
+              type="button"
+              aria-label="Próxima foto"
+              onClick={() => setActiveStorySlide((activeStorySlide + 1) % storySlides.length)}
+            >
+              ›
+            </button>
+          </div>
+          <span className="photo-note">as melhores histórias<br />são vividas juntos</span>
+        </div>
       </section>
 
       <section className="gifts section-shell" id="presentes">
