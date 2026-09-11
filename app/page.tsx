@@ -12,12 +12,12 @@ const slides = [
     position: 'center 42%',
   },
   {
-    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2200&q=88',
+    image: '/presentes/3fazenda.png',
     alt: 'Celebração de casamento em meio à natureza',
     position: 'center 55%',
   },
   {
-    image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=2200&q=88',
+    image: '/presentes/4bq.png',
     alt: 'Detalhes românticos de uma cerimônia de casamento',
     position: 'center 48%',
   },
