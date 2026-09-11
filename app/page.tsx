@@ -45,7 +45,7 @@ const gifts = [
  
   {
     price: 'R$ 700',
-    title: 'Poupança preventiva: "Fundo de emergência para a fatura do cartão pós-casamento',
+    title: 'Poupança preventiva: Fundo de emergência para a fatura do cartão pós-casamento',
     image: '/presentes/poupancareserva.png',
     tag: 'Salva os mano',
   },
