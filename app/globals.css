@@ -356,6 +356,67 @@ nav a:hover { opacity: 1; }
 }
 .form-status.success { color: #486c4f; }
 
+.event-details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, .92fr);
+  gap: clamp(38px, 7vw, 88px);
+  align-items: center;
+  padding-block: 110px;
+}
+.event-photo {
+  min-height: 440px;
+  background-color: var(--mist);
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 24px 70px rgb(21 45 38 / 12%);
+}
+.event-copy { max-width: 460px; }
+.event-copy h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(42px, 5vw, 66px);
+  font-weight: 400;
+  line-height: 1.03;
+  letter-spacing: -.035em;
+}
+.event-time {
+  margin: 13px 0 34px;
+  color: var(--gold);
+  font-family: var(--serif);
+  font-size: 27px;
+  font-style: italic;
+}
+.event-place {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: 28px;
+}
+.event-copy address {
+  color: #5c6c66;
+  font-family: var(--serif);
+  font-size: 17px;
+  font-style: normal;
+  line-height: 1.7;
+}
+.event-map-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+.event-map-link:hover { color: var(--gold); }
+.event-map {
+  display: block;
+  width: 100%;
+  height: 210px;
+  margin-top: 22px;
+  border: 0;
+  filter: saturate(.78) sepia(.08);
+}
+
 .gifts { padding-block: 120px; }
 .section-heading {
   max-width: 760px;
@@ -494,7 +555,7 @@ nav a:hover { opacity: 1; }
   height: 245px;
   background-color: var(--mist);
   background-position: center;
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
 }
 
@@ -667,6 +728,8 @@ footer a {
   .story { grid-template-columns: 1fr; min-height: auto; }
   .story-copy { max-width: 660px; }
   .story-carousel { min-height: 570px; }
+  .event-details { grid-template-columns: 1fr; }
+  .event-copy { max-width: 660px; }
   .rsvp { grid-template-columns: 1fr; }
   .rsvp-intro { max-width: 700px; }
   .payment-grid { grid-template-columns: 1fr; }
@@ -683,6 +746,8 @@ footer a {
   .story-carousel { min-height: 440px; }
   .story-carousel-controls { right: 12px; bottom: 12px; }
   .photo-note { left: 14px; bottom: 14px; }
+  .event-details { padding-block: 82px; }
+  .event-photo { min-height: 330px; }
   .rsvp { padding-block: 82px; }
   .rsvp-form { padding: 28px 22px; }
   .form-row { grid-template-columns: 1fr; }
