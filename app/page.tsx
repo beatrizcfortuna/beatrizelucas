@@ -1,23 +1,23 @@
 'use client';
 
 import Script from 'next/script';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 const turnstileSiteKey = '0x4AAAAAAEoDnlYE7s0enY6v';
 
 const slides = [
   {
-    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2200&q=88',
+    image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=2200&q=88',
     alt: 'Casal celebrando o casamento ao ar livre',
     position: 'center 42%',
   },
   {
-    image: '/presentes/3fazenda.png',
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2200&q=88',
     alt: 'Celebração de casamento em meio à natureza',
     position: 'center 55%',
   },
   {
-    image: '/presentes/4bq.png',
+    image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=2200&q=88',
     alt: 'Detalhes românticos de uma cerimônia de casamento',
     position: 'center 48%',
   },
@@ -26,15 +26,15 @@ const slides = [
 // Troque apenas os valores de image pelas URLs das fotos de vocês.
 const storySlides = [
   {
-    image: '/presentes/f1.jpeg',
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=88',
     alt: 'Primeiro momento da história de Beatriz e Lucas',
   },
   {
-    image: '/presentes/f2.jpg',
+    image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1600&q=88',
     alt: 'Segundo momento da história de Beatriz e Lucas',
   },
   {
-    image: '/presentes/f3.jpeg',
+    image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1600&q=88',
     alt: 'Terceiro momento da história de Beatriz e Lucas',
   },
 ];
@@ -152,23 +152,7 @@ export default function Home() {
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'opening' | 'success' | 'error'>('idle');
   const [flexibleGiftAmount, setFlexibleGiftAmount] = useState('');
   const [showCompanionWarning, setShowCompanionWarning] = useState(false);
-const submittingRef = useRef(false);
-const [formError, setFormError] = useState('');
 
-function getTurnstileApi() {
-  return (
-    window as unknown as {
-      turnstile?: {
-        getResponse: (container: string) => string | undefined;
-        isExpired: (container: string) => boolean;
-        reset: (container: string) => void;
-      };
-    }
-  ).turnstile;
-}
-
-
-  
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return;
@@ -195,103 +179,43 @@ function getTurnstileApi() {
     }
   }, []);
 
-async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-  event.preventDefault();
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setFormStatus('sending');
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const mainName = String(data.get('name') || '').trim();
+    const turnstileToken = String(data.get('cf-turnstile-response') || '').trim();
+    const companions = String(data.get('companions') || '')
+      .split(/[\n,]+/)
+      .map((name) => name.trim())
+      .filter(Boolean);
 
-  // Bloqueia cliques simultâneos, inclusive antes do React atualizar a tela.
-  if (submittingRef.current) return;
-
-  const form = event.currentTarget;
-  const data = new FormData(form);
-  const turnstile = getTurnstileApi();
-
-  setFormError('');
-
-  if (!turnstile) {
-    setFormError('A verificação ainda está carregando. Aguarde alguns instantes.');
-    setFormStatus('error');
-    return;
-  }
-
-  let turnstileToken = '';
-
-  try {
-    if (turnstile.isExpired('#rsvp-turnstile')) {
-      turnstile.reset('#rsvp-turnstile');
-      setFormError('A verificação expirou. Aguarde a nova validação e envie novamente.');
+    if (!turnstileToken) {
       setFormStatus('error');
       return;
     }
 
-    // Lê o token atual diretamente do widget.
-    turnstileToken = turnstile.getResponse('#rsvp-turnstile') || '';
-  } catch {
-    setFormError('Aguarde a verificação de segurança terminar antes de enviar.');
-    setFormStatus('error');
-    return;
-  }
-
-  if (!turnstileToken) {
-    setFormError('Aguarde a verificação de segurança indicar sucesso.');
-    setFormStatus('error');
-    return;
-  }
-
-  const mainName = String(data.get('name') || '').trim();
-  const companions = String(data.get('companions') || '')
-    .split(/[\n,]+/)
-    .map((name) => name.trim())
-    .filter(Boolean);
-
-  submittingRef.current = true;
-  setFormStatus('sending');
-
-  try {
-    const response = await fetch('/api/rsvp', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        names: [mainName, ...companions],
-        phone: String(data.get('phone') || '').trim(),
-        attendance: data.get('attendance') === 'yes',
-        message: String(data.get('message') || '').trim(),
-        turnstileToken,
-      }),
-    });
-
-    const result = (await response.json()) as {
-      ok?: boolean;
-      error?: string;
-    };
-
-    if (!response.ok || result.ok !== true) {
-      throw new Error(
-        result.error || 'Não foi possível salvar a confirmação.',
-      );
-    }
-
-    form.reset();
-    setShowCompanionWarning(false);
-    setFormStatus('success');
-  } catch (error) {
-    setFormError(
-      error instanceof Error
-        ? error.message
-        : 'Falha de conexão. Confira a lista antes de repetir o envio.',
-    );
-    setFormStatus('error');
-  } finally {
-    // Toda tentativa pode consumir o token, mesmo quando não salva.
-    // Renova o widget sem apagar os campos em caso de erro.
     try {
-      turnstile.reset('#rsvp-turnstile');
-    } catch {
-      console.error('Não foi possível reiniciar o Turnstile.');
-    }
+      const response = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          names: [mainName, ...companions],
+          phone: String(data.get('phone') || '').trim(),
+          attendance: data.get('attendance') === 'yes',
+          message: String(data.get('message') || '').trim(),
+          turnstileToken,
+        }),
+      });
 
-    submittingRef.current = false;
+      if (!response.ok) throw new Error('Não foi possível enviar');
+      form.reset();
+      setFormStatus('success');
+    } catch {
+      setFormStatus('error');
+    }
   }
-}
 
   function handleGiftSelect(gift: (typeof gifts)[number]) {
     setSelectedGift(gift);
@@ -369,14 +293,15 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         </header>
 
         <div className="hero-content">
-          <p className="eyebrow">Venha celebrar com a gente!</p>
+          <p className="eyebrow">Vamos celebrar o amor</p>
           <h1 className="couple-mark">
             <span>Beatriz</span>
             <b>&amp;</b>
             <span>Lucas</span>
           </h1>
           <p className="hero-message">
-            Nosso grande dia está chegando! Queremos brindar ao lado de quem faz parte da nossa história.
+            Nosso grande dia está chegando. Queremos viver cada abraço,
+            sorriso e brinde ao lado de quem faz parte da nossa história.
           </p>
           <a className="primary-button" href="#presenca">
             Confirmar presença
@@ -443,7 +368,7 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
           </label>
           {showCompanionWarning && (
   <p className="rsvp-warning">
-    Por organização do evento, somente pessoas incluídas no convite
+    Por organização do evento, somente pessoas incluídas neste convite
     poderão entrar.
   </p>
 )}
@@ -464,25 +389,53 @@ async function handleSubmit(event: FormEvent<HTMLFormElement>) {
             Deixe um recadinho
             <textarea name="message" rows={3} placeholder="Opcional, mas a gente vai amar ler" />
           </label>
-
-
-<div
-  id="rsvp-turnstile"
-  className="cf-turnstile"
-  data-sitekey={turnstileSiteKey}
-  data-theme="light"
-  data-refresh-expired="auto"
-/>
-
-          
+          <div
+            className="cf-turnstile"
+            data-sitekey={turnstileSiteKey}
+            data-theme="light"
+          />
           <button className="submit-button" disabled={formStatus === 'sending'} type="submit">
             {formStatus === 'sending' ? 'Enviando…' : 'Enviar confirmação'}
           </button>
           <p className={`form-status ${formStatus}`} role="status" aria-live="polite">
             {formStatus === 'success' && 'Presença confirmada! Obrigado por fazer parte desse momento. ♡'}
-            {formStatus === 'error' && formError}
+            {formStatus === 'error' && 'Não conseguimos salvar agora. Tente novamente em instantes.'}
           </p>
         </form>
+      </section>
+
+      <section className="event-details section-shell" aria-labelledby="event-details-title">
+        <div
+          className="event-photo"
+          role="img"
+          aria-label="Cerimônia no Lake House"
+          style={{ backgroundImage: 'url("/lake-house-casamento.png")' }}
+        />
+        <div className="event-copy">
+          <p className="section-kicker">O grande dia</p>
+          <h2 id="event-details-title">01 de novembro</h2>
+          <p className="event-time">16h30</p>
+          <p className="event-place">Lake House</p>
+          <address>
+            Av. Otacilio Negrao de Lima, 11447<br />
+            Pampulha, Belo Horizonte - MG<br />
+            31365-450
+          </address>
+          <a
+            className="event-map-link"
+            href="https://www.google.com/maps/search/?api=1&query=Lake+House%2C+Av.+Otac%C3%ADlio+Negr%C3%A3o+de+Lima%2C+11447%2C+Belo+Horizonte+-+MG"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Abrir no Google Maps
+          </a>
+          <iframe
+            className="event-map"
+            title="Mapa do Lake House"
+            src="https://www.google.com/maps?q=Av.+Otac%C3%ADlio+Negr%C3%A3o+de+Lima,+11447,+Pampulha,+Belo+Horizonte,+MG,+31365-450&z=15&output=embed"
+            loading="lazy"
+          />
+        </div>
       </section>
 
       <section className="story section-shell" id="nossa-historia">
