@@ -404,7 +404,10 @@ export default function Home() {
         </form>
       </section>
 
-      <section className="event-details section-shell" aria-labelledby="event-details-title">
+     <section
+  className="event-details section-shell"
+  id="como-chegar"
+  aria-labelledby="event-details-title">
         <div
           className="event-photo"
           role="img"
