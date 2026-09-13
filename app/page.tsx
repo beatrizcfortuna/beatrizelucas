@@ -338,7 +338,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="rsvp" id="presenca">
+   <section
+  className="rsvp"
+  id="presenca"
+  style={{ scrollMarginTop: '24px' }}>
         <div className="rsvp-intro">
           <p className="section-kicker">RSVP</p>
           <h2>Você vem celebrar com a gente?</h2>
@@ -404,10 +407,12 @@ export default function Home() {
         </form>
       </section>
 
-     <section
+<section
   className="event-details section-shell"
   id="como-chegar"
-  aria-labelledby="event-details-title">
+  style={{ scrollMarginTop: '24px' }}
+  aria-labelledby="event-details-title"
+>
         <div
           className="event-photo"
           role="img"
@@ -490,7 +495,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="gifts section-shell" id="presentes">
+<section
+  className="gifts section-shell"
+  id="presentes"
+  style={{ scrollMarginTop: '24px' }}
+>
         <div className="section-heading">
           <p className="section-kicker">Lista de presentes</p>
           <h2>Presentes que rendem boas histórias</h2>
